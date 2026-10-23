@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rishabh & Jooli | Royal Wedding Invitation</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel+Decorative:wght@600;700;900&family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: {
+              50: '#FDFCF7',
+              100: '#FAF6ED',
+              200: '#F5EEDB',
+              300: '#EBDCB9',
+            },
+            gold: {
+              100: '#FBF2D5',
+              200: '#F4E1A5',
+              300: '#E5C46E',
+              400: '#D4AF37',
+              500: '#C59B27',
+              600: '#A47D1C',
+              700: '#846213',
+            },
+            royal: {
+              maroon: '#5B1720',
+              ruby: '#7A1C2B',
+              rose: '#D87A8A',
+              blush: '#F7D6DC',
+              charcoal: '#2D2825'
+            }
+          },
+          fontFamily: {
+            cinzel: ['"Cinzel"', 'serif'],
+            cinzelDeco: ['"Cinzel Decorative"', 'serif'],
+            script: ['"Alex Brush"', 'cursive'],
+            serifText: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Montserrat"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom styling for luxury paper texture & gold accents */
+    body {
+      background-color: #FAF6ED;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(216, 122, 138, 0.06) 0%, transparent 40%),
+        radial-gradient(#d4af3712 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px;
+      color: #2D2825;
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    /* Gold foil shimmer animation */
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #A47D1C 0%, #D4AF37 35%, #F7E7A9 50%, #D4AF37 65%, #846213 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gold-border-gradient {
+      border-image: linear-gradient(to bottom right, #D4AF37, #FBF2D5, #C59B27, #846213) 1;
+    }
+
+    .card-parchment {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FAF6ED 100%);
+      box-shadow: 0 20px 45px -15px rgba(132, 98, 19, 0.18), 0 0 0 1px rgba(212, 175, 55, 0.35);
+    }
+
+    .ornate-box-shadow {
+      box-shadow: 
+        0 0 0 1px #D4AF37,
+        0 0 0 4px #FAF6ED,
+        0 0 0 5px rgba(212, 175, 55, 0.7),
+        0 18px 40px -10px rgba(91, 23, 32, 0.15);
+    }
+
+    /* Falling rose petals canvas */
+    #petals-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    /* Smooth pulse glow */
+    @keyframes softGlow {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .animate-glow {
+      animation: softGlow 4s ease-in-out infinite;
+    }
+
+    /* Subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF6ED;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4AF37;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A47D1C;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen selection:bg-gold-200 selection:text-royal-maroon">
+
+  <!-- Interactive Background Canvas for Falling Rose Petals -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- Floating Audio & Petal Toggle Dock -->
+  <div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 items-end">
+    <!-- Sound Toggle Button -->
+    <button id="audio-toggle-btn" 
+            onclick="toggleAudio()" 
+            class="flex items-center gap-2 px-3.5 py-2.5 bg-white/95 backdrop-blur-md rounded-full border border-gold-400 text-royal-maroon text-xs sm:text-sm font-sans font-medium shadow-lg hover:bg-gold-100 hover:scale-105 transition-all duration-300">
+      <i id="audio-icon" class="fa-solid fa-volume-xmark text-gold-500"></i>
+      <span id="audio-label" class="hidden sm:inline">Shehnai Tune</span>
+    </button>
+    <!-- Rose Petals Shower Toggle -->
+    <button id="petals-toggle-btn" 
+            onclick="togglePetals()" 
+            class="flex items-center gap-2 px-3.5 py-2.5 bg-white/95 backdrop-blur-md rounded-full border border-gold-400 text-royal-ruby text-xs sm:text-sm font-sans font-medium shadow-lg hover:bg-gold-100 hover:scale-105 transition-all duration-300">
+      <i id="petals-icon" class="fa-solid fa-spa text-royal-rose animate-spin-slow"></i>
+      <span id="petals-label" class="hidden sm:inline">Petals: On</span>
+    </button>
+  </div>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="sticky top-0 z-30 bg-cream-50/90 backdrop-blur-md border-b border-gold-300/60 transition-all duration-300">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Auspicious Monogram -->
+      <a href="#hero" class="flex items-center gap-2 group">
+        <span class="w-8 h-8 rounded-full border border-gold-400 bg-gold-100/50 flex items-center justify-center text-gold-600 font-cinzel text-xs font-bold shadow-sm">
+          R&J
+        </span>
+        <span class="font-script text-2xl sm:text-3xl text-royal-maroon font-bold pt-1">
+          Rishabh & Jooli
+        </span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-6 font-cinzel text-xs tracking-widest text-royal-charcoal uppercase">
+        <a href="#hero" class="hover:text-gold-600 transition-colors">Invitation</a>
+        <a href="#countdown" class="hover:text-gold-600 transition-colors">Countdown</a>
+        <a href="#families" class="hover:text-gold-600 transition-colors">Families</a>
+        <a href="#events" class="hover:text-gold-600 transition-colors">Events</a>
+        <a href="#venue" class="hover:text-gold-600 transition-colors">Venue</a>
+        <a href="#rsvp" class="hover:text-gold-600 transition-colors">Blessings</a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-2">
+        <a href="#rsvp" class="px-4 py-1.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-400 text-royal-maroon font-sans font-semibold text-xs tracking-wider uppercase shadow-md hover:brightness-105 transition-all">
+          Bless The Couple
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-4xl mx-auto px-4 py-6 sm:py-10">
+
+    <!-- AUSPICIOUS GANESHA BANNER -->
+    <div class="text-center mb-6 animate-glow">
+      <div class="inline-flex items-center justify-center w-14 h-14 mb-2 rounded-full bg-gold-100/80 border border-gold-400/80 text-gold-600 shadow-inner">
+        <svg class="w-8 h-8 fill-current text-gold-600" viewBox="0 0 24 24">
+          <path d="M12 2C9.5 2 7.5 3.5 7 5.5C6.2 5.2 5.3 5 4.5 5C2.5 5 1 6.5 1 8.5C1 10.2 2.1 11.6 3.7 11.9C3.8 13.5 4.5 15 5.7 16.1C5.3 17.2 4.7 18.5 3.5 19.5C3.1 19.8 3.4 20.5 4 20.5C6.2 20.5 8 19.2 9.1 18C10 18.3 11 18.5 12 18.5C13 18.5 14 18.3 14.9 18C16 19.2 17.8 20.5 20 20.5C20.6 20.5 20.9 19.8 20.5 19.5C19.3 18.5 18.7 17.2 18.3 16.1C19.5 15 20.2 13.5 20.3 11.9C21.9 11.6 23 10.2 23 8.5C23 6.5 21.5 5 19.5 5C18.7 5 17.8 5.2 17 5.5C16.5 3.5 14.5 2 12 2ZM12 4C13.7 4 15 5.3 15 7C15 8.7 13.7 10 12 10C10.3 10 9 8.7 9 7C9 5.3 10.3 4 12 4ZM12 11.5C13.8 11.5 15.5 12.3 16.6 13.6C16.3 14.6 15.7 15.7 15 16.5C14.1 16.8 13.1 17 12 17C10.9 17 9.9 16.8 9 16.5C8.3 15.7 7.7 14.6 7.4 13.6C8.5 12.3 10.2 11.5 12 11.5Z"/>
+        </svg>
+      </div>
+      <p class="font-cinzel text-xs sm:text-sm tracking-[0.3em] text-gold-700 font-bold uppercase">
+        ॥ श्री गणेशाय नमः ॥
+      </p>
+      <p class="font-serifText text-sm sm:text-base text-royal-maroon/80 italic mt-0.5">
+        "Vakratunda Mahakaya Suryakoti Samaprabha, Nirvighnam Kuru Me Deva Sarvakaryeshu Sarvada"
+      </p>
+    </div>
+
+    <!-- MAIN ROYAL INVITATION CARD -->
+    <section id="hero" class="relative card-parchment ornate-box-shadow rounded-2xl p-6 sm:p-12 mb-12 overflow-hidden border border-gold-300">
+      
+      <!-- Ornate Corner Motifs -->
+      <div class="absolute -top-1 -left-1 w-20 h-20 sm:w-28 sm:h-28 pointer-events-none opacity-80">
+        <svg viewBox="0 0 100 100" class="w-full h-full fill-gold-500">
+          <path d="M0,0 L0,50 Q10,25 25,25 Q25,10 50,0 Z M12,12 C18,22 28,18 35,5 C20,12 12,20 12,12 Z"/>
+          <circle cx="16" cy="16" r="3" fill="#D87A8A"/>
+          <circle cx="28" cy="8" r="2.5" fill="#D4AF37"/>
+          <circle cx="8" cy="28" r="2.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <div class="absolute -top-1 -right-1 w-20 h-20 sm:w-28 sm:h-28 pointer-events-none opacity-80 rotate-90">
+        <svg viewBox="0 0 100 100" class="w-full h-full fill-gold-500">
+          <path d="M0,0 L0,50 Q10,25 25,25 Q25,10 50,0 Z M12,12 C18,22 28,18 35,5 C20,12 12,20 12,12 Z"/>
+          <circle cx="16" cy="16" r="3" fill="#D87A8A"/>
+          <circle cx="28" cy="8" r="2.5" fill="#D4AF37"/>
+          <circle cx="8" cy="28" r="2.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <div class="absolute -bottom-1 -left-1 w-20 h-20 sm:w-28 sm:h-28 pointer-events-none opacity-80 -rotate-90">
+        <svg viewBox="0 0 100 100" class="w-full h-full fill-gold-500">
+          <path d="M0,0 L0,50 Q10,25 25,25 Q25,10 50,0 Z M12,12 C18,22 28,18 35,5 C20,12 12,20 12,12 Z"/>
+          <circle cx="16" cy="16" r="3" fill="#D87A8A"/>
+          <circle cx="28" cy="8" r="2.5" fill="#D4AF37"/>
+          <circle cx="8" cy="28" r="2.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <div class="absolute -bottom-1 -right-1 w-20 h-20 sm:w-28 sm:h-28 pointer-events-none opacity-80 rotate-180">
+        <svg viewBox="0 0 100 100" class="w-full h-full fill-gold-500">
+          <path d="M0,0 L0,50 Q10,25 25,25 Q25,10 50,0 Z M12,12 C18,22 28,18 35,5 C20,12 12,20 12,12 Z"/>
+          <circle cx="16" cy="16" r="3" fill="#D87A8A"/>
+          <circle cx="28" cy="8" r="2.5" fill="#D4AF37"/>
+          <circle cx="8" cy="28" r="2.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+
+      <!-- Card Top Invitation Line -->
+      <div class="text-center space-y-1 mb-8">
+        <div class="flex items-center justify-center gap-3">
+          <span class="h-[1px] w-12 sm:w-20 bg-gradient-to-r from-transparent to-gold-400"></span>
+          <p class="font-cinzel text-xs sm:text-sm tracking-[0.25em] text-royal-charcoal font-semibold uppercase">
+            Together With Their Families...
+          </p>
+          <span class="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent to-gold-400"></span>
+        </div>
+        <div class="flex justify-center items-center gap-1 text-gold-500">
+          <i class="fa-solid fa-diamond text-[7px]"></i>
+          <i class="fa-solid fa-circle text-[5px]"></i>
+          <i class="fa-solid fa-diamond text-[7px]"></i>
+        </div>
+      </div>
+
+      <!-- Centerpiece: Illustrated Couple Representation & Typography -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+        <!-- Couple Visual Illustration Card -->
+        <div class="lg:col-span-5 flex flex-col items-center">
+          <div class="relative w-64 h-80 sm:w-72 sm:h-96 rounded-2xl p-2 bg-gradient-to-b from-gold-300 via-cream-100 to-gold-400 shadow-xl border-2 border-gold-400/60">
+            <div class="w-full h-full rounded-xl bg-gradient-to-b from-cream-100 via-white to-cream-200 overflow-hidden relative flex flex-col items-center justify-end p-4 border border-gold-300">
+              <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-100/60 via-cream-200/40 to-transparent"></div>
+              
+              <div class="absolute top-2 inset-x-0 flex justify-center opacity-40 pointer-events-none">
+                <svg class="w-48 h-48 fill-none stroke-gold-600 stroke-[1.2]" viewBox="0 0 100 100">
+                  <path d="M10,90 L10,40 Q10,10 50,5 Q90,10 90,40 L90,90 M18,90 L18,40 Q18,16 50,12 Q82,16 82,40 L82,90"/>
+                  <circle cx="50" cy="5" r="3" fill="#D4AF37"/>
+                </svg>
+              </div>
+
+              <div class="relative z-10 w-full flex flex-col items-center justify-end">
+                <div class="relative w-56 h-64 flex items-end justify-center">
+                  <!-- Groom (Rishabh) -->
+                  <div class="absolute left-2 bottom-0 w-32 flex flex-col items-center z-10">
+                    <div class="relative w-16 h-20 rounded-t-full bg-[#E8C2A0] border border-[#CFA17C] flex flex-col items-center justify-start overflow-hidden pt-1 shadow-sm">
+                      <div class="w-full h-7 bg-[#231A14] rounded-b-md"></div>
+                      <div class="w-9 h-1.5 bg-[#422C20] rounded-full mt-7"></div>
+                    </div>
+                    <div class="w-28 h-36 bg-[#C4A882] rounded-t-2xl border border-[#A68864] relative shadow-md flex justify-center">
+                      <div class="w-10 h-16 bg-white clip-v border-b border-gold-400 flex flex-col items-center">
+                        <div class="w-4 h-1 border-b-2 border-gold-400 mt-2"></div>
+                      </div>
+                      <div class="absolute top-0 left-2 w-7 h-24 border-r-2 border-[#A68864] rotate-6"></div>
+                      <div class="absolute top-0 right-2 w-7 h-24 border-l-2 border-[#A68864] -rotate-6"></div>
+                    </div>
+                  </div>
+
+                  <!-- Bride (Jooli) -->
+                  <div class="absolute right-3 bottom-0 w-32 flex flex-col items-center z-20">
+                    <div class="relative w-14 h-18 rounded-t-full bg-[#EFC9AA] border border-[#DEAB88] flex flex-col items-center justify-start overflow-hidden pt-0.5 shadow-sm">
+                      <div class="w-full h-7 bg-[#1C1512] rounded-b-lg"></div>
+                      <div class="absolute top-2 w-2 h-2 rounded-full bg-gold-400 border border-white shadow"></div>
+                      <div class="absolute bottom-1 w-8 h-3 rounded-full border-b-2 border-gold-300 flex justify-center gap-0.5">
+                        <span class="w-1 h-1 bg-white rounded-full"></span>
+                        <span class="w-1 h-1 bg-white rounded-full"></span>
+                        <span class="w-1 h-1 bg-white rounded-full"></span>
+                      </div>
+                    </div>
+                    <div class="w-24 h-32 bg-gradient-to-b from-[#E7DCBF] to-[#D4C39B] rounded-t-xl border border-gold-400/80 relative shadow-md flex flex-col items-center">
+                      <div class="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:6px_6px] opacity-70"></div>
+                      <div class="absolute -left-2 bottom-8 w-6 h-5 bg-[#A81E2E] rounded-md border border-gold-400 shadow flex items-center justify-center">
+                        <span class="w-full h-0.5 bg-white"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="relative -mt-3 z-30 flex items-center justify-center gap-1.5 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full border border-gold-300 shadow-md">
+                  <span class="text-royal-rose text-xs">🌸</span>
+                  <span class="font-cinzel text-[10px] tracking-widest text-royal-maroon font-bold uppercase">Eternal Love</span>
+                  <span class="text-royal-rose text-xs">🌸</span>
+                </div>
+              </div>
+
+              <div class="absolute -bottom-2 -left-2 text-xl text-royal-rose/80 transform -rotate-12">🌹</div>
+              <div class="absolute -bottom-2 -right-2 text-xl text-royal-rose/80 transform rotate-12">🌹</div>
+            </div>
+          </div>
+          <p class="font-serifText italic text-royal-maroon text-sm mt-3 text-center">
+            "Two souls, one sacred journey under the stars"
+          </p>
+        </div>
+
+        <!-- Typography & Announcement -->
+        <div class="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+
+          <!-- The Couple Calligraphy -->
+          <div class="space-y-1 w-full">
+            <h1 class="font-script text-6xl sm:text-7xl md:text-8xl text-royal-ruby tracking-tight drop-shadow-sm">
+              Rishabh
+            </h1>
+            <div class="flex items-center justify-center lg:justify-start gap-4 my-1">
+              <span class="h-[1px] w-12 bg-gold-400"></span>
+              <span class="font-script text-4xl sm:text-5xl text-gold-600 font-semibold">&amp;</span>
+              <span class="h-[1px] w-12 bg-gold-400"></span>
+            </div>
+            <h1 class="font-script text-6xl sm:text-7xl md:text-8xl text-royal-ruby tracking-tight drop-shadow-sm">
+              Jooli
+            </h1>
+          </div>
+
+          <!-- Formal Invitation Request -->
+          <div class="space-y-2 max-w-lg">
+            <p class="font-cinzel text-xs sm:text-sm tracking-[0.2em] text-royal-charcoal font-semibold uppercase leading-relaxed">
+              Request the honor of your presence at the wedding ceremony of their children
+            </p>
+            <div class="flex items-center justify-center lg:justify-start gap-1 text-gold-500 pt-1">
+              <i class="fa-solid fa-feather-pointed text-xs"></i>
+              <span class="w-8 h-[1px] bg-gold-400"></span>
+            </div>
+          </div>
+
+          <!-- Ornate Gold Wedding Date Box -->
+          <div class="relative p-1 bg-gradient-to-r from-gold-400 via-gold-200 to-gold-500 rounded-xl shadow-lg w-full max-w-xs sm:max-w-sm">
+            <div class="bg-cream-50 rounded-lg py-4 px-6 text-center border border-gold-400/60 relative">
+              <div class="text-gold-600 text-xs mb-1">
+                <i class="fa-solid fa-crown"></i>
+              </div>
+              <p class="font-cinzel text-xs sm:text-sm tracking-[0.35em] text-royal-charcoal font-bold uppercase">
+                Friday
+              </p>
+              <div class="font-cinzelDeco text-5xl sm:text-6xl font-black text-royal-maroon my-1 tracking-wider">
+                20
+              </div>
+              <p class="font-cinzel text-sm sm:text-base tracking-[0.35em] text-royal-charcoal font-bold uppercase">
+                November
+              </p>
+              <p class="font-cinzel text-xs tracking-[0.25em] text-gold-600 font-semibold mt-0.5">
+                2026
+              </p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-2 flex flex-col sm:flex-row items-center gap-4 w-full justify-center lg:justify-start">
+            <a href="#events" class="font-serifText italic text-2xl text-royal-ruby hover:text-gold-600 transition-colors">
+              Please join us.
+            </a>
+            <div class="flex items-center gap-2">
+              <button onclick="addToGoogleCalendar()" class="px-5 py-2.5 rounded-full bg-royal-maroon hover:bg-royal-ruby text-cream-100 font-sans text-xs tracking-wider uppercase font-semibold flex items-center gap-2 shadow-md hover:scale-105 transition-all">
+                <i class="fa-regular fa-calendar-plus text-gold-300"></i>
+                Add to Calendar
+              </button>
+              <button onclick="shareInvite()" class="px-3.5 py-2.5 rounded-full border border-gold-400 bg-white hover:bg-gold-50 text-gold-700 shadow-sm transition-all" title="Share with Family">
+                <i class="fa-solid fa-share-nodes"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Ribbon -->
+      <div class="mt-10 pt-6 border-t border-gold-300/80 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-royal-charcoal font-serifText italic gap-2 text-center">
+        <span>Auspicious Mahurat &amp; Divine Blessings</span>
+        <span class="text-gold-600 font-bold tracking-widest uppercase font-cinzel text-[11px]">With Best Compliments From The Families</span>
+        <span>Kanpur Nagar, Uttar Pradesh</span>
+      </div>
+
+    </section>
+
+    <!-- LIVE WEDDING COUNTDOWN SECTION -->
+    <section id="countdown" class="mb-14 text-center">
+      <div class="inline-block mb-3">
+        <span class="font-cinzel text-xs tracking-[0.3em] text-gold-700 font-bold uppercase block">
+          Counting Down To The Sacred Vows
+        </span>
+        <div class="h-0.5 w-24 bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mt-1"></div>
+      </div>
+      <h2 class="font-serifText text-3xl sm:text-4xl text-royal-maroon font-semibold mb-6">
+        Every Second Brings Us Closer to Forever
+      </h2>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-xl mx-auto">
+        <div class="card-parchment p-4 rounded-xl border border-gold-300 shadow-md">
+          <span id="days" class="block font-cinzelDeco text-3xl sm:text-4xl text-royal-ruby font-bold">00</span>
+          <span class="font-cinzel text-[11px] tracking-widest uppercase text-gold-700 font-semibold">Days</span>
+        </div>
+        <div class="card-parchment p-4 rounded-xl border border-gold-300 shadow-md">
+          <span id="hours" class="block font-cinzelDeco text-3xl sm:text-4xl text-royal-ruby font-bold">00</span>
+          <span class="font-cinzel text-[11px] tracking-widest uppercase text-gold-700 font-semibold">Hours</span>
+        </div>
+        <div class="card-parchment p-4 rounded-xl border border-gold-300 shadow-md">
+          <span id="minutes" class="block font-cinzelDeco text-3xl sm:text-4xl text-royal-ruby font-bold">00</span>
+          <span class="font-cinzel text-[11px] tracking-widest uppercase text-gold-700 font-semibold">Minutes</span>
+        </div>
+        <div class="card-parchment p-4 rounded-xl border border-gold-300 shadow-md">
+          <span id="seconds" class="block font-cinzelDeco text-3xl sm:text-4xl text-gold-600 font-bold">00</span>
+          <span class="font-cinzel text-[11px] tracking-widest uppercase text-gold-700 font-semibold">Seconds</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE FAMILIES SECTION -->
+    <section id="families" class="mb-14">
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center gap-3">
+          <span class="h-[1px] w-12 bg-gold-400"></span>
+          <p class="font-cinzel text-xs sm:text-sm tracking-[0.25em] text-royal-charcoal font-semibold uppercase">
+            Together With Their Families...
+          </p>
+          <span class="h-[1px] w-12 bg-gold-400"></span>
+        </div>
+        <h2 class="font-cinzel text-2xl sm:text-3xl text-royal-maroon font-bold mt-2">
+          The Blessed Families
+        </h2>
+        <p class="font-serifText italic text-royal-charcoal/80 text-base max-w-md mx-auto mt-1">
+          Honoring the roots that raised them and the love that unites them
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Groom's Family Card -->
+        <div class="card-parchment rounded-xl p-6 sm:p-8 border border-gold-400 shadow-md relative overflow-hidden group hover:border-gold-500 transition-all">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gold-200/50 via-transparent to-transparent pointer-events-none rounded-bl-full"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-gold-600 text-lg">
+              <i class="fa-solid fa-shield-halved"></i>
+            </span>
+            <div>
+              <span class="font-serifText italic text-royal-maroon text-sm font-semibold">Groom's Side</span>
+              <h3 class="font-cinzel text-lg sm:text-xl font-bold text-royal-charcoal">
+                Parents of the Groom
+              </h3>
+            </div>
+          </div>
+
+          <div class="my-4 py-4 border-y border-gold-200 text-center sm:text-left">
+            <p class="font-serifText text-2xl sm:text-3xl text-royal-ruby font-semibold">
+              Mamta &amp; Daya Narayan Sachan
+            </p>
+            <p class="font-sans text-xs tracking-wider text-royal-charcoal/70 uppercase mt-1">
+              Smt. Mamta Sachan &amp; Shri Daya Narayan Sachan
+            </p>
+          </div>
+
+          <p class="font-serifText italic text-royal-charcoal/80 text-sm">
+            Cordially seek your warm blessings and divine presence as their beloved son Rishabh begins this sacred journey of matrimonial union.
+          </p>
+        </div>
+
+        <!-- Bride's Family Card -->
+        <div class="card-parchment rounded-xl p-6 sm:p-8 border border-gold-400 shadow-md relative overflow-hidden group hover:border-gold-500 transition-all">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-royal-blush/60 via-transparent to-transparent pointer-events-none rounded-bl-full"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-royal-ruby text-lg">
+              <i class="fa-solid fa-heart"></i>
+            </span>
+            <div>
+              <span class="font-serifText italic text-royal-maroon text-sm font-semibold">Bride's Side</span>
+              <h3 class="font-cinzel text-lg sm:text-xl font-bold text-royal-charcoal">
+                Parents of the Bride
+              </h3>
+            </div>
+          </div>
+
+          <div class="my-4 py-4 border-y border-gold-200 text-center sm:text-left">
+            <p class="font-serifText text-2xl sm:text-3xl text-royal-ruby font-semibold">
+              Deepa &amp; Ashwani Kumar Sachan
+            </p>
+            <p class="font-sans text-xs tracking-wider text-royal-charcoal/70 uppercase mt-1">
+              Smt. Deepa Sachan &amp; Shri Ashwani Kumar Sachan
+            </p>
+          </div>
+
+          <p class="font-serifText italic text-royal-charcoal/80 text-sm">
+            Warmly invite you to grace the auspicious occasion and shower their daughter Jooli with unconditional love and everlasting blessings.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-6 text-center">
+        <p class="font-serifText italic text-xl text-royal-ruby">
+          "With best compliments from the Sachan family, near &amp; dear ones."
+        </p>
+      </div>
+    </section>
+
+    <!-- WEDDING EVENTS & CEREMONY SCHEDULE -->
+    <section id="events" class="mb-14">
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center gap-3">
+          <span class="h-[1px] w-12 bg-gold-400"></span>
+          <p class="font-cinzel text-xs sm:text-sm tracking-[0.25em] text-royal-charcoal font-semibold uppercase">
+            Auspicious Ceremonies
+          </p>
+          <span class="h-[1px] w-12 bg-gold-400"></span>
+        </div>
+        <h2 class="font-cinzel text-2xl sm:text-3xl text-royal-maroon font-bold mt-2">
+          Wedding Day Timeline
+        </h2>
+        <p class="font-sans text-xs tracking-widest text-gold-700 uppercase mt-1">
+          Friday, 20 November 2026
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="card-parchment p-5 rounded-xl border border-gold-300 shadow-sm flex items-start gap-4 hover:border-gold-500 transition-all">
+          <div class="w-12 h-12 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-gold-700 text-xl flex-shrink-0 shadow-inner">
+            <i class="fa-solid fa-horse-head"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cinzel text-base font-bold text-royal-maroon">Baraat Swagat</h3>
+              <span class="font-sans text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gold-100 text-gold-800 border border-gold-300">
+                06:00 PM
+              </span>
+            </div>
+            <p class="font-serifText text-sm text-royal-charcoal/80 mt-1">
+              Joyous arrival of the groom and Baraatis amidst dhol beats, festive fireworks, and traditional Aarti welcome.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-parchment p-5 rounded-xl border border-gold-300 shadow-sm flex items-start gap-4 hover:border-gold-500 transition-all">
+          <div class="w-12 h-12 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-royal-ruby text-xl flex-shrink-0 shadow-inner">
+            <i class="fa-solid fa-ring"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cinzel text-base font-bold text-royal-maroon">Jaimala Ceremony</h3>
+              <span class="font-sans text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gold-100 text-gold-800 border border-gold-300">
+                08:00 PM
+              </span>
+            </div>
+            <p class="font-serifText text-sm text-royal-charcoal/80 mt-1">
+              Exchange of fragrant floral garlands between Rishabh &amp; Jooli on the royal dais with petal showers.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-parchment p-5 rounded-xl border border-gold-300 shadow-sm flex items-start gap-4 hover:border-gold-500 transition-all">
+          <div class="w-12 h-12 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-gold-700 text-xl flex-shrink-0 shadow-inner">
+            <i class="fa-solid fa-utensils"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cinzel text-base font-bold text-royal-maroon">Preeti Bhoj (Dinner)</h3>
+              <span class="font-sans text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gold-100 text-gold-800 border border-gold-300">
+                08:30 PM Onwards
+              </span>
+            </div>
+            <p class="font-serifText text-sm text-royal-charcoal/80 mt-1">
+              Delightful royal feast of authentic Awadhi &amp; Indian culinary delicacies arranged for all guests and well-wishers.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-parchment p-5 rounded-xl border border-gold-300 shadow-sm flex items-start gap-4 hover:border-gold-500 transition-all">
+          <div class="w-12 h-12 rounded-full bg-gold-100 border border-gold-400 flex items-center justify-center text-royal-ruby text-xl flex-shrink-0 shadow-inner">
+            <i class="fa-solid fa-fire"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cinzel text-base font-bold text-royal-maroon">Shubh Vivah / Phere</h3>
+              <span class="font-sans text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gold-100 text-gold-800 border border-gold-300">
+                10:30 PM (Mahurat)
+              </span>
+            </div>
+            <p class="font-serifText text-sm text-royal-charcoal/80 mt-1">
+              Sacred Vedic wedding rituals and Seven Pheras around the holy fire, sealing the holy bond of companionship.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VENUE & NAVIGATION -->
+    <section id="venue" class="mb-14">
+      <div class="card-parchment rounded-2xl p-6 sm:p-10 border border-gold-400 shadow-xl relative overflow-hidden">
+        
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold-100 border border-gold-400 text-gold-600 mb-2">
+            <i class="fa-solid fa-location-dot text-xl"></i>
+          </div>
+          <p class="font-cinzel text-xs tracking-[0.3em] text-gold-700 font-bold uppercase">
+            Wedding Venue
+          </p>
+          <h2 class="font-cinzel text-2xl sm:text-3xl text-royal-maroon font-extrabold mt-1">
+            SIDDHI VINAYAK GUEST HOUSE
+          </h2>
+          <p class="font-serifText text-lg sm:text-xl text-royal-charcoal font-semibold mt-1">
+            Jahanabad Road, Ghatampur, Kanpur Nagar
+          </p>
+          <p class="font-sans text-xs text-royal-charcoal/70 uppercase tracking-wider mt-0.5">
+            Uttar Pradesh, India
+          </p>
+        </div>
+
+        <div class="bg-white/80 rounded-xl p-5 border border-gold-300 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-center md:text-left">
+            <div class="flex items-center justify-center md:justify-start gap-2 text-sm text-royal-charcoal">
+              <i class="fa-solid fa-calendar-check text-gold-600"></i>
+              <span><strong>Date:</strong> Friday, 20 November 2026</span>
+            </div>
+            <div class="flex items-center justify-center md:justify-start gap-2 text-sm text-royal-charcoal">
+              <i class="fa-solid fa-clock text-gold-600"></i>
+              <span><strong>Reception of Baraat:</strong> 6:00 PM onwards</span>
+            </div>
+            <div class="flex items-center justify-center md:justify-start gap-2 text-sm text-royal-charcoal">
+              <i class="fa-solid fa-square-parking text-gold-600"></i>
+              <span>Ample valet &amp; guest parking available at the venue</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+            <a href="https://www.google.com/maps/search/?api=1&query=Siddhi+Vinayak+Guest+House+Jahanabad+Road+Ghatampur+Kanpur+Nagar" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-royal-maroon font-sans font-bold text-xs uppercase tracking-wider shadow-md hover:scale-105 transition-all text-center flex items-center justify-center gap-2">
+              <i class="fa-solid fa-diamond-turn-right text-royal-maroon"></i>
+              Get Directions
+            </a>
+            <button onclick="copyVenueAddress()" class="w-full sm:w-auto px-5 py-3 rounded-full border border-gold-400 bg-white hover:bg-gold-50 text-royal-charcoal font-sans font-medium text-xs uppercase tracking-wider shadow-sm transition-all text-center flex items-center justify-center gap-2">
+              <i class="fa-regular fa-copy text-gold-600"></i>
+              Copy Address
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RSVP & BLESSINGS GUESTBOOK SECTION (UPDATED FOR DIRECT WHATSAPP) -->
+    <section id="rsvp" class="mb-14">
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center gap-3">
+          <span class="h-[1px] w-12 bg-gold-400"></span>
+          <p class="font-cinzel text-xs sm:text-sm tracking-[0.25em] text-royal-charcoal font-semibold uppercase">
+            Shower Your Blessings
+          </p>
+          <span class="h-[1px] w-12 bg-gold-400"></span>
+        </div>
+        <h2 class="font-cinzel text-2xl sm:text-3xl text-royal-maroon font-bold mt-2">
+          Bless The Couple &amp; RSVP via WhatsApp
+        </h2>
+        <p class="font-serifText italic text-royal-charcoal/80 text-base max-w-md mx-auto mt-1">
+          Your warm wishes make our special day complete
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- RSVP Form (Direct WhatsApp Submitter) -->
+        <div class="lg:col-span-5 card-parchment rounded-xl p-6 sm:p-7 border border-gold-400 shadow-md">
+          <form id="rsvp-form" onsubmit="handleRsvpSubmit(event)" class="space-y-4">
+            <div>
+              <label class="block font-cinzel text-xs uppercase tracking-wider text-royal-charcoal font-bold mb-1">
+                Your Full Name *
+              </label>
+              <input type="text" id="guest-name" required placeholder="e.g. Ramesh & Family" 
+                     class="w-full px-3.5 py-2.5 rounded-lg border border-gold-300 focus:border-gold-500 focus:ring-1 focus:ring-gold-400 bg-white/90 text-sm font-sans outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block font-cinzel text-xs uppercase tracking-wider text-royal-charcoal font-bold mb-1">
+                  Will You Attend?
+                </label>
+                <select id="attendance-status" 
+                        class="w-full px-3 py-2.5 rounded-lg border border-gold-300 focus:border-gold-500 focus:ring-1 focus:ring-gold-400 bg-white/90 text-xs sm:text-sm font-sans outline-none">
+                  <option value="joyfully">Joyfully Accept</option>
+                  <option value="warm-wishes">Blessings from Afar</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block font-cinzel text-xs uppercase tracking-wider text-royal-charcoal font-bold mb-1">
+                  Guests Count
+                </label>
+                <select id="guest-count" 
+                        class="w-full px-3 py-2.5 rounded-lg border border-gold-300 focus:border-gold-500 focus:ring-1 focus:ring-gold-400 bg-white/90 text-xs sm:text-sm font-sans outline-none">
+                  <option value="1">1 Guest</option>
+                  <option value="2" selected>2 Guests</option>
+                  <option value="3">3 Guests</option>
+                  <option value="4+">4+ Guests</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-cinzel text-xs uppercase tracking-wider text-royal-charcoal font-bold mb-1">
+                Your Blessing / Message for Rishabh &amp; Jooli *
+              </label>
+              <textarea id="guest-message" rows="3" required placeholder="Wishing both of you a lifetime of happiness, health and togetherness..." 
+                        class="w-full px-3.5 py-2.5 rounded-lg border border-gold-300 focus:border-gold-500 focus:ring-1 focus:ring-gold-400 bg-white/90 text-sm font-serifText outline-none resize-none"></textarea>
+            </div>
+
+            <!-- WhatsApp Green Action Button -->
+            <button type="submit" 
+                    class="w-full py-3.5 rounded-full bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:brightness-110 text-white font-sans font-bold text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+              <i class="fa-brands fa-whatsapp text-lg text-white"></i>
+              Send Wishes &amp; RSVP on WhatsApp
+            </button>
+            <p class="text-[11px] text-center text-royal-charcoal/60 font-sans">
+              ✨ Clicking will open WhatsApp directly with your RSVP details.
+            </p>
+          </form>
+        </div>
+
+        <!-- Live Blessings Guestbook (7 cols) -->
+        <div class="lg:col-span-7 flex flex-col">
+          <div class="flex items-center justify-between mb-3 px-1">
+            <h3 class="font-cinzel text-sm font-bold uppercase tracking-wider text-royal-charcoal flex items-center gap-2">
+              <i class="fa-solid fa-scroll text-gold-600"></i>
+              Wall of Blessings
+            </h3>
+            <span id="wishes-counter" class="font-sans text-xs px-2.5 py-0.5 rounded-full bg-gold-200/70 text-royal-maroon font-semibold">
+              3 Wishes
+            </span>
+          </div>
+
+          <!-- Scrollable Wishes Wall -->
+          <div id="wishes-container" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+            <!-- Dynamic and Default wishes render here -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER WITH ROYAL SIGNATURE -->
+    <footer class="text-center pt-8 pb-14 border-t border-gold-300/60 space-y-4">
+      <div class="flex items-center justify-center gap-2 text-gold-600">
+        <span class="w-12 h-[1px] bg-gold-400"></span>
+        <i class="fa-solid fa-infinity text-sm"></i>
+        <span class="w-12 h-[1px] bg-gold-400"></span>
+      </div>
+
+      <div class="space-y-1">
+        <p class="font-script text-4xl sm:text-5xl text-royal-ruby font-bold">
+          Rishabh &amp; Jooli
+        </p>
+        <p class="font-cinzel text-xs tracking-[0.25em] text-royal-charcoal font-semibold uppercase">
+          #RishabhWedsJooli • 20 November 2026
+        </p>
+      </div>
+
+      <p class="font-serifText italic text-royal-charcoal/70 text-sm max-w-md mx-auto">
+        "Thank you for being part of our story, our traditions, and our most cherished celebration."
+      </p>
+
+      <div class="pt-2 text-[11px] font-sans text-royal-charcoal/50">
+        Venue: Siddhi Vinayak Guest House, Ghatampur, Kanpur Nagar
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- CUSTOM NOTIFICATION TOAST -->
+  <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="card-parchment border-2 border-gold-400 px-6 py-3 rounded-full shadow-2xl flex items-center gap-3">
+      <span id="toast-icon" class="text-gold-600 text-lg"><i class="fa-solid fa-circle-check"></i></span>
+      <p id="toast-message" class="font-serifText font-bold text-royal-maroon text-base"></p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    /* ========================================================
+       📱 0. WHATSAPP CONFIGURATION (अपना नंबर यहाँ डालें)
+       ======================================================== */
+    // Country code '91' के साथ अपना 10 अंकों का WhatsApp नंबर यहाँ लिखें
+    // उदाहरण: "919876543210"
+    const WHATSAPP_PHONE_NUMBER = "91XXXXXXXXXX"; 
+
+    /* ========================================================
+       1. LIVE COUNTDOWN TO 20 NOVEMBER 2026
+       ======================================================== */
+    const weddingDate = new Date('November 20, 2026 18:00:00').getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = weddingDate - now;
+
+      if (difference <= 0) {
+        document.getElementById('days').innerText = "00";
+        document.getElementById('hours').innerText = "00";
+        document.getElementById('minutes').innerText = "00";
+        document.getElementById('seconds').innerText = "00";
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = String(days).padStart(2, '0');
+      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* ========================================================
+       2. FALLING ROSE PETALS CANVASES
+       ======================================================== */
+    const canvas = document.getElementById('petals-canvas');
+    const ctx = canvas.getContext('2d');
+    let petalsActive = true;
+    let petalsArray = [];
+    const petalColors = [
+      { r: 216, g: 122, b: 138, a: 0.8 },
+      { r: 232, g: 146, b: 162, a: 0.75 },
+      { r: 212, g: 175, b: 55, a: 0.65 },
+      { r: 180, g: 45, b: 65, a: 0.7 }
+    ];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Petal {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = -20 - Math.random() * 50;
+        this.size = 8 + Math.random() * 12;
+        this.speedY = 1 + Math.random() * 1.8;
+        this.speedX = (Math.random() - 0.5) * 1.5;
+        this.angle = Math.random() * 360;
+        this.spin = (Math.random() - 0.5) * 2;
+        this.color = petalColors[Math.floor(Math.random() * petalColors.length)];
+        this.wobble = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = 0.03 + Math.random() * 0.02;
+      }
+      update() {
+        this.y += this.speedY;
+        this.wobble += this.wobbleSpeed;
+        this.x += this.speedX + Math.sin(this.wobble) * 0.8;
+        this.angle += this.spin;
+
+        if (this.y > canvas.height + 20 || this.x < -20 || this.x > canvas.width + 20) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.angle * Math.PI) / 180);
+        ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.a})`;
+        
+        ctx.beginPath();
+        ctx.moveTo(0, -this.size / 2);
+        ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size / 2, this.size / 2, 0, this.size);
+        ctx.bezierCurveTo(-this.size / 2, this.size / 2, -this.size / 2, -this.size / 2, 0, -this.size / 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function initPetals() {
+      petalsArray = [];
+      const count = window.innerWidth < 640 ? 25 : 45;
+      for (let i = 0; i < count; i++) {
+        const petal = new Petal();
+        petal.y = Math.random() * canvas.height;
+        petalsArray.push(petal);
+      }
+    }
+    initPetals();
+
+    function animatePetals() {
+      if (petalsActive) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < petalsArray.length; i++) {
+          petalsArray[i].update();
+          petalsArray[i].draw();
+        }
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      requestAnimationFrame(animatePetals);
+    }
+    animatePetals();
+
+    function togglePetals() {
+      petalsActive = !petalsActive;
+      const label = document.getElementById('petals-label');
+      const icon = document.getElementById('petals-icon');
+      if (petalsActive) {
+        label.innerText = 'Petals: On';
+        icon.classList.remove('opacity-40');
+      } else {
+        label.innerText = 'Petals: Off';
+        icon.classList.add('opacity-40');
+      }
+    }
+
+    /* ========================================================
+       3. AUSPICIOUS WEDDING RAGA AUDIO (Web Audio API Synthesizer)
+       ======================================================== */
+    let audioCtx = null;
+    let isPlayingAudio = false;
+    let masterGain = null;
+    let ragaInterval = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+      }
+    }
+
+    function playIndianTone(freq, type, duration, delay = 0, gainVal = 0.15) {
+      if (!isPlayingAudio || !audioCtx) return;
+      setTimeout(() => {
+        if (!isPlayingAudio) return;
+        try {
+          const osc = audioCtx.createOscillator();
+          const noteGain = audioCtx.createGain();
+          
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+          noteGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+          noteGain.gain.exponentialRampToValueAtTime(gainVal, audioCtx.currentTime + 0.1);
+          noteGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+          osc.connect(noteGain);
+          noteGain.connect(masterGain);
+
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch(e) {
+          console.error(e);
+        }
+      }, delay * 1000);
+    }
+
+    function startRagaLoop() {
+      const scale = [293.66, 329.63, 369.99, 440.00, 493.88, 587.33];
+      
+      function droneCycle() {
+        if (!isPlayingAudio) return;
+        playIndianTone(146.83, 'triangle', 4.5, 0, 0.08);
+        playIndianTone(220.00, 'sine', 4.5, 0.4, 0.06);
+        playIndianTone(293.66, 'sine', 3.8, 1.2, 0.06);
+      }
+
+      droneCycle();
+      ragaInterval = setInterval(() => {
+        if (!isPlayingAudio) return;
+        droneCycle();
+        const randomNote = scale[Math.floor(Math.random() * scale.length)];
+        playIndianTone(randomNote, 'sine', 2.2, 1.5, 0.12);
+      }, 4200);
+    }
+
+    function toggleAudio() {
+      initAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const icon = document.getElementById('audio-icon');
+
+      if (!isPlayingAudio) {
+        isPlayingAudio = true;
+        icon.className = 'fa-solid fa-volume-high text-gold-600 animate-pulse';
+        startRagaLoop();
+        showToast("Playing auspicious wedding tunes 🎶", "success");
+      } else {
+        isPlayingAudio = false;
+        clearInterval(ragaInterval);
+        icon.className = 'fa-solid fa-volume-xmark text-gold-500';
+        showToast("Wedding melody paused", "info");
+      }
+    }
+
+    /* ========================================================
+       4. GOOGLE CALENDAR ADD FUNCTION
+       ======================================================== */
+    function addToGoogleCalendar() {
+      const title = encodeURIComponent("Wedding Ceremony: Rishabh & Jooli");
+      const dates = "20261120T123000Z/20261120T183000Z";
+      const details = encodeURIComponent(
+        "Together with their families, Rishabh & Jooli request the honor of your presence to celebrate their wedding ceremony.\n\nParents of Groom: Smt. Mamta & Shri Daya Narayan Sachan\nParents of Bride: Smt. Deepa & Shri Ashwani Kumar Sachan"
+      );
+      const location = encodeURIComponent("Siddhi Vinayak Guest House, Jahanabad Road, Ghatampur, Kanpur Nagar, Uttar Pradesh");
+      
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
+      window.open(url, '_blank');
+    }
+
+    /* ========================================================
+       5. COPY VENUE ADDRESS & SHARE INVITE
+       ======================================================== */
+    function copyVenueAddress() {
+      const address = "Siddhi Vinayak Guest House, Jahanabad Road, Ghatampur, Kanpur Nagar, Uttar Pradesh";
+      const tempInput = document.createElement("input");
+      tempInput.value = address;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      showToast("Venue address copied to clipboard!", "success");
+    }
+
+    function shareInvite() {
+      const shareData = {
+        title: "Wedding Invitation | Rishabh & Jooli",
+        text: "Together with their families, Rishabh & Jooli request the honor of your presence at their wedding on Friday, 20 November 2026 at Siddhi Vinayak Guest House, Ghatampur, Kanpur Nagar.",
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else {
+        const temp = document.createElement("input");
+        temp.value = window.location.href;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        showToast("Invitation link copied to clipboard!", "success");
+      }
+    }
+
+    /* ========================================================
+       6. RSVP TO WHATSAPP & WALL OF BLESSINGS
+       ======================================================== */
+    const defaultWishes = [
+      {
+        name: "Uncle Ramesh & Neha Chachi",
+        status: "joyfully",
+        message: "Wishing Rishabh and Jooli a blissful married life filled with endless laughter, mutual respect, and prosperity!",
+        date: "2 days ago"
+      },
+      {
+        name: "Abhinav Sachan & Family",
+        status: "joyfully",
+        message: "Heartiest congratulations to Daya Narayan Ji & Ashwani Ji! Can't wait to dance in the Baraat on 20th November!",
+        date: "Yesterday"
+      },
+      {
+        name: "Pooja & Saurabh Verma",
+        status: "joyfully",
+        message: "May God bless this wonderful pair with everlasting love and joy. Our warmest wishes to both families!",
+        date: "Just now"
+      }
+    ];
+
+    function getSavedWishes() {
+      const saved = localStorage.getItem('rishabh_jooli_wishes');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch(e) {
+          return defaultWishes;
+        }
+      }
+      return defaultWishes;
+    }
+
+    function renderWishes() {
+      const container = document.getElementById('wishes-container');
+      const counter = document.getElementById('wishes-counter');
+      const wishes = getSavedWishes();
+
+      counter.innerText = `${wishes.length} Blessing${wishes.length === 1 ? '' : 's'}`;
+      container.innerHTML = '';
+
+      wishes.forEach(item => {
+        const wishCard = document.createElement('div');
+        wishCard.className = "card-parchment p-3.5 rounded-lg border border-gold-300 shadow-sm transition-all hover:border-gold-400";
+        wishCard.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-cinzel text-xs font-bold text-royal-maroon flex items-center gap-1.5">
+              <i class="fa-solid fa-envelope-open-text text-gold-600"></i>
+              ${escapeHtml(item.name)}
+            </span>
+            <span class="text-[10px] font-sans text-royal-charcoal/60 uppercase">
+              ${item.status === 'joyfully' ? '<span class="text-emerald-700 font-semibold">Attending</span>' : '<span class="text-amber-700 font-semibold">Blessing</span>'} • ${item.date || 'Recent'}
+            </span>
+          </div>
+          <p class="font-serifText text-sm text-royal-charcoal italic">
+            "${escapeHtml(item.message)}"
+          </p>
+        `;
+        container.appendChild(wishCard);
+      });
+    }
+
+    /* DIRECT WHATSAPP SUBMISSION HANDLER */
+    function handleRsvpSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('guest-name').value.trim();
+      const statusSelect = document.getElementById('attendance-status');
+      const status = statusSelect.value;
+      const statusText = statusSelect.options[statusSelect.selectedIndex].text;
+      const guestCount = document.getElementById('guest-count').value;
+      const message = document.getElementById('guest-message').value.trim();
+
+      if (!name || !message) return;
+
+      // 1. WhatsApp formatted text structure
+      const attendanceIcon = (status === 'joyfully') ? '✅' : '🌸';
+      const whatsappText = 
+`✨ *WEDDING RSVP & BLESSINGS* ✨
+━━━━━━━━━━━━━━━━━━━━
+💍 *Rishabh & Jooli's Wedding*
+📅 *Date:* Friday, 20 November 2026
+📍 *Venue:* Siddhi Vinayak Guest House, Ghatampur, Kanpur
+
+👤 *Guest Name:* ${name}
+${attendanceIcon} *Attendance Status:* ${statusText}
+👥 *Number of Guests:* ${guestCount} Person(s)
+
+💌 *Wishes & Blessings:*
+"${message}"
+━━━━━━━━━━━━━━━━━━━━
+Heartiest congratulations & lots of love! 💐`;
+
+      // 2. Open WhatsApp (wa.me Link)
+      const encodedText = encodeURIComponent(whatsappText);
+      let whatsappURL = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedText}`;
+
+      // If user hasn't set custom phone number, open general WhatsApp share
+      if (!WHATSAPP_PHONE_NUMBER || WHATSAPP_PHONE_NUMBER.includes("XXXXXXXXXX")) {
+        whatsappURL = `https://api.whatsapp.com/send?text=${encodedText}`;
+      }
+
+      window.open(whatsappURL, '_blank');
+
+      // 3. Save locally to show on Wall of Blessings too
+      const newWish = {
+        name: name,
+        status: status,
+        message: message,
+        date: "Just now"
+      };
+
+      const wishes = getSavedWishes();
+      wishes.unshift(newWish);
+      localStorage.setItem('rishabh_jooli_wishes', JSON.stringify(wishes));
+
+      // 4. Reset form & trigger petal shower celebration
+      document.getElementById('rsvp-form').reset();
+      renderWishes();
+      celebratePetalBurst();
+
+      showToast("Redirecting to WhatsApp with your blessings! 💐", "success");
+    }
+
+    function celebratePetalBurst() {
+      for (let i = 0; i < 40; i++) {
+        const petal = new Petal();
+        petal.y = Math.random() * 100;
+        petal.speedY = 2.5 + Math.random() * 3;
+        petalsArray.push(petal);
+      }
+    }
+
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    /* ========================================================
+       7. TOAST NOTIFICATIONS
+       ======================================================== */
+    let toastTimeout;
+    function showToast(msg, type = "success") {
+      const toast = document.getElementById('toast');
+      const messageElem = document.getElementById('toast-message');
+      const iconElem = document.getElementById('toast-icon');
+
+      clearTimeout(toastTimeout);
+      messageElem.innerText = msg;
+      
+      if (type === "success") {
+        iconElem.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+      } else {
+        iconElem.innerHTML = `<i class="fa-solid fa-circle-info text-gold-600"></i>`;
+      }
+
+      toast.classList.remove('opacity-0', '-translate-y-24');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-24');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 4000);
+    }
+
+    window.onload = function() {
+      renderWishes();
+    };
+  </script>
+</body>
+</html>
