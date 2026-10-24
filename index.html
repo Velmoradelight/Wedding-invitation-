@@ -128,6 +128,11 @@
   </style>
 </head>
 <body class="relative min-h-screen selection:bg-gold-200 selection:text-royal-maroon">
+    <!-- Background Wedding Music -->
+  <audio id="wedding-audio" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+  
 
   <!-- Interactive Background Canvas for Falling Rose Petals -->
   <canvas id="petals-canvas"></canvas>
@@ -916,89 +921,35 @@
       }
     }
 
-    /* ========================================================
-       3. AUSPICIOUS WEDDING RAGA AUDIO (Web Audio API Synthesizer)
-       ======================================================== */
-    let audioCtx = null;
-    let isPlayingAudio = false;
-    let masterGain = null;
-    let ragaInterval = null;
+ /* ========================================================
+   3. WEDDING AUDIO TOGGLE (MP3 PLAY / PAUSE)
+   ======================================================== */
+const weddingAudio = document.getElementById('wedding-audio');
+let isPlayingAudio = false;
 
-    function initAudio() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.18, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
-      }
-    }
+function toggleAudio() {
+  const icon = document.getElementById('audio-icon');
+  const label = document.getElementById('audio-label');
 
-    function playIndianTone(freq, type, duration, delay = 0, gainVal = 0.15) {
-      if (!isPlayingAudio || !audioCtx) return;
-      setTimeout(() => {
-        if (!isPlayingAudio) return;
-        try {
-          const osc = audioCtx.createOscillator();
-          const noteGain = audioCtx.createGain();
-          
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  if (!isPlayingAudio) {
+    weddingAudio.play().then(() => {
+      isPlayingAudio = true;
+      icon.className = 'fa-solid fa-volume-high text-gold-600 animate-pulse';
+      if (label) label.innerText = 'Music: Playing';
+      showToast("Playing auspicious wedding tunes 🎶", "success");
+    }).catch(error => {
+      console.log("Audio play blocked:", error);
+      showToast("Please tap again to play music", "info");
+    });
+  } else {
+    weddingAudio.pause();
+    isPlayingAudio = false;
+    icon.className = 'fa-solid fa-volume-xmark text-gold-500';
+    if (label) label.innerText = 'Shehnai Tune';
+    showToast("Wedding melody paused", "info");
+  }
+}
 
-          noteGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-          noteGain.gain.exponentialRampToValueAtTime(gainVal, audioCtx.currentTime + 0.1);
-          noteGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-          osc.connect(noteGain);
-          noteGain.connect(masterGain);
-
-          osc.start();
-          osc.stop(audioCtx.currentTime + duration);
-        } catch(e) {
-          console.error(e);
-        }
-      }, delay * 1000);
-    }
-
-    function startRagaLoop() {
-      const scale = [293.66, 329.63, 369.99, 440.00, 493.88, 587.33];
-      
-      function droneCycle() {
-        if (!isPlayingAudio) return;
-        playIndianTone(146.83, 'triangle', 4.5, 0, 0.08);
-        playIndianTone(220.00, 'sine', 4.5, 0.4, 0.06);
-        playIndianTone(293.66, 'sine', 3.8, 1.2, 0.06);
-      }
-
-      droneCycle();
-      ragaInterval = setInterval(() => {
-        if (!isPlayingAudio) return;
-        droneCycle();
-        const randomNote = scale[Math.floor(Math.random() * scale.length)];
-        playIndianTone(randomNote, 'sine', 2.2, 1.5, 0.12);
-      }, 4200);
-    }
-
-    function toggleAudio() {
-      initAudio();
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      const icon = document.getElementById('audio-icon');
-
-      if (!isPlayingAudio) {
-        isPlayingAudio = true;
-        icon.className = 'fa-solid fa-volume-high text-gold-600 animate-pulse';
-        startRagaLoop();
-        showToast("Playing auspicious wedding tunes 🎶", "success");
-      } else {
-        isPlayingAudio = false;
-        clearInterval(ragaInterval);
-        icon.className = 'fa-solid fa-volume-xmark text-gold-500';
-        showToast("Wedding melody paused", "info");
-      }
-    }
 
     /* ========================================================
        4. GOOGLE CALENDAR ADD FUNCTION
