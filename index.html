@@ -1178,6 +1178,36 @@ Heartiest congratulations & lots of love! 💐`;
       }, 4000);
     }
 
+      /* ========================================================
+     AUTOMATIC WEDDING MUSIC PLAY ON OPEN / FIRST TOUCH
+     ======================================================== */
+  function autoPlayMusic() {
+    const audio = document.getElementById('wedding-audio');
+    const icon = document.getElementById('audio-icon');
+    const label = document.getElementById('audio-label');
+
+    if (audio && !isPlayingAudio) {
+      audio.play().then(() => {
+        isPlayingAudio = true;
+        if (icon) icon.className = 'fa-solid fa-volume-high text-gold-600 animate-pulse';
+        if (label) label.innerText = 'Music: Playing';
+        
+        ['click', 'touchstart', 'scroll'].forEach(evt => {
+          document.removeEventListener(evt, autoPlayMusic);
+        });
+      }).catch(err => {
+        console.log("Autoplay waiting for user touch:", err);
+      });
+    }
+  }
+
+  // पेज खुलते ही चलाने की कोशिश करेगा
+  autoPlayMusic();
+
+  // अगर फ़ोन/ब्राउज़र रोके, तो स्क्रीन पर पहली टच या स्क्रॉल होते ही तुरंत बजा देगा
+  ['click', 'touchstart', 'scroll'].forEach(evt => {
+    document.addEventListener(evt, autoPlayMusic, { once: true });
+  });
     window.onload = function() {
       renderWishes();
     };
